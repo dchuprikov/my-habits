@@ -238,14 +238,123 @@
     .week-chip.done{background:var(--green-soft);color:var(--green);font-weight:800}
     .tap-hint{margin-top:8px;color:var(--muted);font-size:12px;text-align:center}
 
+
+    .day-mode-tools{
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+      margin:9px 2px 0;padding:8px 10px;background:rgba(255,255,255,.72);
+      border:1px solid #e7ebf0;border-radius:13px;
+    }
+    body:not(.day-mode) .day-mode-tools{display:none}
+    .day-mode-tools .tool-label{font-size:12px;color:var(--muted);font-weight:700}
+    .away-btn{
+      border:1px solid #dce3ec;background:#fff;border-radius:11px;padding:8px 11px;
+      color:#596674;font-weight:800;cursor:pointer;white-space:nowrap;
+    }
+    .away-btn.active{background:#fff5e9;border-color:#f0c88f;color:#9b651c}
+    .away-list{display:grid;gap:6px;max-height:44vh;overflow:auto;padding-right:2px}
+    .away-item{
+      display:flex;align-items:center;gap:10px;padding:9px 10px;border:1px solid #e5e9ef;
+      border-radius:12px;background:#fff;cursor:pointer;
+    }
+    .away-item input{width:18px;height:18px;flex:0 0 18px}
+    .away-item .emoji{width:26px;text-align:center;font-size:19px}
+    .away-item .name{font-size:14px;font-weight:700;line-height:1.2;flex:1}
+    .away-all{
+      display:flex;align-items:center;gap:10px;padding:11px 12px;margin-bottom:12px;
+      border-radius:13px;background:#fff7eb;border:1px solid #f1d2a3;font-weight:800;cursor:pointer;
+    }
+    .away-all input{width:19px;height:19px}
+    .skip-note{
+      margin:10px 0 0;padding:11px 13px;background:#fff7eb;border:1px solid #f2d8ae;
+      border-radius:13px;color:#8a6225;font-size:13px;line-height:1.35;
+    }
+    .cell.skipped{cursor:default}
+    .cell.skipped .mark{color:#c0a477}
+    .cell.skipped .mark::before{content:"×"!important;font-size:21px!important}
+
     @media (max-width:680px){
-      .app{padding:10px 8px 100px}
-      .summary h1{font-size:26px}
-      .icon-btn{width:43px;height:43px}
-      .weekbox,.group{border-radius:15px}
-      .group-title{font-size:20px}
-      .habit-name .label{font-size:17px}
-      .fab{right:16px;bottom:18px}
+      .app{padding:7px 6px 88px}
+      .topbar{padding:6px 0 8px}
+      .summary-row{gap:7px}
+      .summary h1{font-size:21px;line-height:1.08;letter-spacing:-.025em}
+      .summary .sub{font-size:12.5px;margin-top:3px}
+      .actions{gap:5px}
+      .icon-btn{width:38px;height:38px;border-radius:12px;font-size:22px}
+      .progress{margin-top:9px;height:3px}
+      .mode-switch{margin:7px 0 8px;border-radius:12px;padding:3px}
+      .mode-switch button{min-height:35px;border-radius:9px;font-size:14px}
+      .weekbox,.group{border-radius:13px}
+      .weekbox{margin-top:7px}
+      .week-head{padding:9px 10px 6px;gap:6px}
+      .week-label{font-size:17px}
+      .week-nav{gap:4px}
+      .week-nav button{width:31px;height:31px;border-radius:9px;font-size:18px}
+      .days,
+      .habit-grid{
+        grid-template-columns:minmax(126px,1.45fr) repeat(7,minmax(35px,1fr));
+        min-width:0;
+      }
+      body.day-mode .days{grid-template-columns:repeat(7,minmax(0,1fr));min-width:0}
+      .day{padding:7px 1px 8px}
+      .day .num{font-size:16px}
+      .day .dow{font-size:10px;margin-top:4px}
+      .tap-hint{font-size:10.5px;margin-top:5px}
+      .day-mode-tools{margin-top:6px;padding:6px 8px}
+      .away-btn{font-size:12px;padding:7px 9px}
+      .group{margin-top:9px}
+      .group-head{gap:6px;padding:9px 10px}
+      .group-head > div[style*="font-size:22px"]{font-size:18px!important}
+      .group-accent{width:5px;height:25px}
+      .group-title{font-size:17px}
+      .group-count{font-size:14px}
+      .chev{font-size:15px}
+      .habit-name{
+        min-height:57px;gap:5px;padding:6px 5px 6px 7px;
+      }
+      .habit-name .emoji{width:21px;font-size:17px}
+      .habit-name .label{font-size:13.5px;line-height:1.12}
+      .habit-name .meta{font-size:9.5px;margin-top:3px}
+      .habit-info{width:24px;height:24px;flex-basis:24px;font-size:12px}
+      .habit-menu{width:23px;height:27px;font-size:16px}
+      .cell{min-height:57px}
+      .cell .mark{width:28px;height:28px;font-size:23px}
+      .cell:not(.done):not(.off) .mark::before{font-size:27px}
+      .weekly-badge{font-size:9px;padding:3px 5px;margin-top:3px}
+      .day-habit{min-height:58px;gap:8px;padding:7px 9px}
+      .day-habit .emoji{width:27px;flex-basis:27px;font-size:19px}
+      .day-habit .title{font-size:15px;line-height:1.15}
+      .day-habit .meta{font-size:10.5px;margin-top:3px}
+      .weekly-progress{font-size:10px;padding:3px 6px;margin-top:4px}
+      .day-info{width:27px;height:27px;flex-basis:27px;font-size:12px}
+      .day-check{width:36px;height:36px;flex-basis:36px;font-size:23px}
+      .fab{width:50px;height:50px;right:12px;bottom:14px;border-radius:16px;font-size:27px}
+      dialog{
+        width:calc(100vw - 18px);
+        max-width:calc(100vw - 18px);
+        max-height:88vh;
+        overflow:auto;
+        border-radius:17px;
+      }
+      .modal{padding:15px}
+      .modal h2{font-size:19px;margin-bottom:13px}
+      .row{grid-template-columns:1fr;gap:0}
+      .field{margin-top:10px}
+      .field label{font-size:11.5px;margin-bottom:5px}
+      .field input,.field select{padding:10px 11px;border-radius:11px;font-size:14px}
+      .modal-actions{
+        gap:6px;margin-top:15px;flex-wrap:wrap;
+        position:sticky;bottom:-15px;background:#fff;padding:9px 0 2px;
+      }
+      .btn{padding:9px 11px;border-radius:10px;font-size:13px;max-width:100%}
+      .btn.danger{margin-right:0}
+      .setting-row{gap:8px;align-items:flex-start;flex-wrap:wrap}
+      .settings-list{gap:4px}
+      .stats-title{font-size:19px}
+      .stats-emoji{width:44px;height:44px;flex-basis:44px;font-size:23px}
+      .stat-value{font-size:20px}
+      .stat-label{font-size:10.5px}
+      .history-day{min-height:37px;font-size:9.5px}
+      .history-day strong{font-size:11px}
     }
   </style>
 </head>
@@ -284,6 +393,10 @@
     </div>
   </section>
   <div class="tap-hint" id="tapHint">Нажми на дату сверху, чтобы выбрать день</div>
+  <div class="day-mode-tools">
+    <span class="tool-label">Исключения на день</span>
+    <button class="away-btn" id="awayBtn">✈️ Вне режима</button>
+  </div>
 
   <main id="groups"></main>
 </div>
@@ -336,6 +449,28 @@
   </form>
 </dialog>
 
+
+
+<dialog id="awayDialog">
+  <div class="modal">
+    <h2 id="awayDialogTitle">Вне режима</h2>
+    <div class="hint" style="margin-bottom:12px">
+      Отмеченные здесь привычки не входят в счетчики и не разрывают серии.
+    </div>
+    <label class="away-all">
+      <input type="checkbox" id="awayAll">
+      <span>Не учитывать весь день</span>
+    </label>
+    <div class="field" id="awayHabitsField">
+      <label>Или исключить только отдельные привычки</label>
+      <div class="away-list" id="awayList"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn secondary" id="clearAway">Сбросить</button>
+      <button class="btn primary" id="saveAway">Готово</button>
+    </div>
+  </div>
+</dialog>
 
 <dialog id="statsDialog">
   <div class="modal">
@@ -414,6 +549,7 @@
       {id:'fly', name:'Нахлыст / мушки', emoji:'🎣', group:'week', schedule:{type:'weekly', target:1}},
     ],
     done: {},
+    skips: {},
     selectedWeekOffset: 0
   };
 
@@ -433,7 +569,8 @@
     progressBar: $('#progressBar'),
     habitDialog: $('#habitDialog'),
     settingsDialog: $('#settingsDialog'),
-    statsDialog: $('#statsDialog')
+    statsDialog: $('#statsDialog'),
+    awayDialog: $('#awayDialog')
   };
 
   function clone(x){ return JSON.parse(JSON.stringify(x)); }
@@ -442,7 +579,10 @@
       const raw = localStorage.getItem(STORAGE_KEY);
       if(raw){
         const parsed = JSON.parse(raw);
-        if(parsed && parsed.groups && parsed.habits && parsed.done) return parsed;
+        if(parsed && parsed.groups && parsed.habits && parsed.done){
+          if(!parsed.skips) parsed.skips={};
+          return parsed;
+        }
       }
     }catch(e){}
     return clone(defaultState);
@@ -482,6 +622,20 @@
     if(t==='weekly') return true;
     return true;
   }
+  function daySkip(date){
+    return state.skips?.[isoDate(date)] || null;
+  }
+  function isWholeDaySkipped(date){
+    return !!daySkip(date)?.all;
+  }
+  function isHabitSkipped(habit,date){
+    const s=daySkip(date);
+    if(!s) return false;
+    return !!s.all || (s.habits||[]).includes(habit.id);
+  }
+  function isEffectiveHabitDay(habit,date){
+    return applies(habit,date) && !isHabitSkipped(habit,date);
+  }
   function isDone(habitId,date){
     return !!state.done[habitId]?.[isoDate(date)];
   }
@@ -520,6 +674,7 @@
       : 'Нажми на дату сверху, чтобы открыть этот день';
 
     renderHeader(weekStart,today);
+    updateAwayButton();
     if(viewMode==='day') renderDayGroups(selectedDate);
     else renderGroups(weekStart,today);
     updateSummary(today,weekStart);
@@ -570,11 +725,18 @@
   function renderDayGroups(date){
     els.groups.innerHTML='';
     const weekStart=mondayOf(date);
+
+    if(isWholeDaySkipped(date)){
+      els.groups.innerHTML='<div class="day-empty">✈️ <strong>День вне режима</strong><br><span style="font-size:13px">Привычки сегодня не учитываются и серии не прерываются.</span></div>';
+      return;
+    }
     let rendered=0;
 
     for(const group of state.groups){
       const habits=state.habits.filter(h =>
-        h.group===group.id && (h.schedule?.type==='weekly' || applies(h,date))
+        h.group===group.id &&
+        (h.schedule?.type==='weekly' || applies(h,date)) &&
+        !isHabitSkipped(h,date)
       );
       if(!habits.length) continue;
       rendered++;
@@ -707,12 +869,13 @@
     for(let i=0;i<7;i++){
       const d=addDays(weekStart,i);
       const on=applies(habit,d);
+      const skipped=on && isHabitSkipped(habit,d);
       const done=isDone(habit.id,d);
       const cell=document.createElement('div');
-      cell.className='cell'+(isWeekend(d)?' weekend':'')+(sameDate(d,today)?' today':'')+(!on?' off':'')+(done?' done':'');
-      cell.title = on ? `${habit.name} — ${isoDate(d)}` : 'В этот день привычка не действует';
+      cell.className='cell'+(isWeekend(d)?' weekend':'')+(sameDate(d,today)?' today':'')+(!on?' off':'')+(skipped?' skipped':'')+(done&&!skipped?' done':'');
+      cell.title = !on ? 'В этот день привычка не действует' : skipped ? 'Исключено на этот день' : `${habit.name} — ${isoDate(d)}`;
       cell.innerHTML='<div class="mark"></div>';
-      if(on) cell.onclick=()=>setDone(habit.id,d,!done);
+      if(on && !skipped) cell.onclick=()=>setDone(habit.id,d,!done);
       grid.appendChild(cell);
     }
   }
@@ -727,7 +890,7 @@
       }else{
         for(let i=0;i<7;i++){
           const d=addDays(weekStart,i);
-          if(applies(h,d)){
+          if(isEffectiveHabitDay(h,d)){
             weekGoal++;
             if(isDone(h.id,d)) weekDone++;
           }
@@ -746,7 +909,7 @@
     let active=0, done=0;
     for(const h of state.habits){
       if(h.schedule?.type==='weekly') continue;
-      if(applies(h,selectedDate)){
+      if(isEffectiveHabitDay(h,selectedDate)){
         active++;
         if(isDone(h.id,selectedDate)) done++;
       }
@@ -769,7 +932,7 @@
       if(h.schedule?.type==='weekly'){
         const target=h.schedule.target||1;
         total+=target; done+=Math.min(weeklyCount(h,weekStart),target);
-      }else if(today>=weekStart && today<addDays(weekStart,7) && applies(h,today)){
+      }else if(today>=weekStart && today<addDays(weekStart,7) && isEffectiveHabitDay(h,today)){
         total++; if(isDone(h.id,today)) done++;
       }
     }
@@ -788,10 +951,10 @@
     let streak=0;
 
     // Сегодняшняя незакрытая привычка пока не обнуляет серию.
-    if(applies(habit,d) && !isDone(habit.id,d)) d=addDays(d,-1);
+    if(isEffectiveHabitDay(habit,d) && !isDone(habit.id,d)) d=addDays(d,-1);
 
     for(let guard=0;guard<3700;guard++){
-      if(applies(habit,d)){
+      if(isEffectiveHabitDay(habit,d)){
         if(isDone(habit.id,d)) streak++;
         else break;
       }
@@ -807,7 +970,7 @@
     const end=new Date();
     let best=0,cur=0;
     for(let d=new Date(start),guard=0; d<=end && guard<3700; d=addDays(d,1),guard++){
-      if(!applies(habit,d)) continue;
+      if(!isEffectiveHabitDay(habit,d)) continue;
       if(isDone(habit.id,d)){cur++;best=Math.max(best,cur)}
       else cur=0;
     }
@@ -819,7 +982,7 @@
     let d=new Date();
     d=new Date(d.getFullYear(),d.getMonth(),d.getDate());
     for(let guard=0;guard<3700 && scheduled<limit;guard++,d=addDays(d,-1)){
-      if(applies(habit,d)){
+      if(isEffectiveHabitDay(habit,d)){
         scheduled++;
         if(isDone(habit.id,d)) done++;
       }
@@ -921,15 +1084,82 @@
       for(let i=27;i>=0;i--){
         const d=addDays(today,-i);
         const on=applies(habit,d);
+        const skipped=on && isHabitSkipped(habit,d);
         const done=isDone(habit.id,d);
-        const cls='history-day'+(!on?' off':'')+(done?' done':'')+(sameDate(d,today)?' today':'');
-        html+=`<div class="${cls}"><strong>${d.getDate()}</strong>${DOW[dayIndexMon0(d)]}</div>`;
+        const cls='history-day'+(!on||skipped?' off':'')+(done&&!skipped?' done':'')+(sameDate(d,today)?' today':'');
+        html+=`<div class="${cls}" title="${skipped?'Исключено':''}"><strong>${d.getDate()}</strong>${skipped?'×':DOW[dayIndexMon0(d)]}</div>`;
       }
       html+=`</div>`;
     }
 
     $('#statsContent').innerHTML=html;
     els.statsDialog.showModal();
+  }
+
+
+  function updateAwayButton(){
+    const btn=$('#awayBtn');
+    if(!btn) return;
+    const s=daySkip(selectedDate);
+    const all=!!s?.all;
+    const count=(s?.habits||[]).length;
+    btn.classList.toggle('active', all || count>0);
+    if(all) btn.textContent='✈️ Весь день';
+    else if(count) btn.textContent=`✈️ Исключено: ${count}`;
+    else btn.textContent='✈️ Вне режима';
+  }
+
+  function openAwayDialog(){
+    const date=selectedDate;
+    const fmt=new Intl.DateTimeFormat('ru-RU',{day:'numeric',month:'long'});
+    $('#awayDialogTitle').textContent=`Вне режима · ${fmt.format(date)}`;
+    const current=daySkip(date) || {all:false,habits:[]};
+    $('#awayAll').checked=!!current.all;
+
+    const list=$('#awayList');
+    list.innerHTML='';
+    const applicable=state.habits.filter(h => h.schedule?.type==='weekly' || applies(h,date));
+    for(const h of applicable){
+      const label=document.createElement('label');
+      label.className='away-item';
+      label.innerHTML=`<input type="checkbox" value="${h.id}" ${current.habits?.includes(h.id)?'checked':''}>
+        <span class="emoji">${h.emoji||'✓'}</span><span class="name">${escapeHtml(h.name)}</span>`;
+      list.appendChild(label);
+    }
+    updateAwayDialogState();
+    els.awayDialog.showModal();
+  }
+
+  function updateAwayDialogState(){
+    const all=$('#awayAll').checked;
+    $('#awayHabitsField').style.opacity=all?'.42':'1';
+    $('#awayHabitsField').style.pointerEvents=all?'none':'auto';
+  }
+
+  function saveAwaySelection(){
+    const key=isoDate(selectedDate);
+    const all=$('#awayAll').checked;
+    const habits=[...document.querySelectorAll('#awayList input:checked')].map(x=>x.value);
+
+    if(all || habits.length){
+      if(!state.skips) state.skips={};
+      state.skips[key]={all,habits:all?[]:habits};
+    }else if(state.skips){
+      delete state.skips[key];
+    }
+    save();
+    els.awayDialog.close();
+    render();
+    toast(all?'День не учитывается':habits.length?`Исключено привычек: ${habits.length}`:'Исключения сняты');
+  }
+
+  function clearAwaySelection(){
+    const key=isoDate(selectedDate);
+    if(state.skips) delete state.skips[key];
+    save();
+    els.awayDialog.close();
+    render();
+    toast('Обычный день');
   }
 
   function escapeHtml(s=''){
@@ -996,6 +1226,10 @@
   $('#addBtn').onclick=()=>openHabitDialog();
   $('#fab').onclick=()=>openHabitDialog();
   $('#settingsBtn').onclick=()=>els.settingsDialog.showModal();
+  $('#awayBtn').onclick=openAwayDialog;
+  $('#awayAll').onchange=updateAwayDialogState;
+  $('#saveAway').onclick=saveAwaySelection;
+  $('#clearAway').onclick=clearAwaySelection;
   $('#closeSettings').onclick=()=>els.settingsDialog.close();
   $('#dayModeBtn').onclick=()=>{
     viewMode='day';
@@ -1048,6 +1282,7 @@
       try{
         const data=JSON.parse(r.result);
         if(!data.groups||!data.habits||!data.done) throw new Error();
+        if(!data.skips) data.skips={};
         state=data; save(); render(); els.settingsDialog.close(); toast('Данные восстановлены');
       }catch(err){ alert('Не удалось прочитать резервную копию.'); }
     };
