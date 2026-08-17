@@ -162,6 +162,82 @@
       transition:.2s;z-index:60;font-size:14px;
     }
     .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+    .mode-switch{
+      display:grid;grid-template-columns:1fr 1fr;gap:4px;
+      background:#e9edf3;border-radius:14px;padding:4px;margin:10px 0 12px;
+    }
+    .mode-switch button{
+      min-height:42px;border-radius:11px;color:#687482;font-weight:800;cursor:pointer;
+      transition:.15s background,.15s color,.15s box-shadow;
+    }
+    .mode-switch button.active{
+      background:#fff;color:var(--blue);box-shadow:0 3px 12px rgba(24,39,61,.09);
+    }
+    .day.selected{box-shadow:inset 0 -4px 0 var(--blue)}
+    body.day-mode .days{grid-template-columns:repeat(7,minmax(42px,1fr));min-width:0}
+    body.day-mode .day-spacer{display:none}
+    body.day-mode .weekbox .scroller{overflow-x:hidden}
+    .day-group-list{display:block}
+    .day-habit{
+      min-height:72px;display:flex;align-items:center;gap:11px;padding:10px 12px 10px 14px;
+      border-top:1px solid var(--line);background:#fff;
+    }
+    .day-habit.done{background:#fbfdfb}
+    .day-habit .emoji{width:34px;text-align:center;font-size:23px;flex:0 0 34px}
+    .day-habit .info{flex:1;min-width:0;cursor:pointer}
+    .day-habit .title{font-size:18px;line-height:1.2;font-weight:650}
+    .day-habit.done .title{color:#617168}
+    .day-habit .meta{font-size:12px;color:var(--muted);margin-top:5px}
+    .weekly-progress{
+      display:inline-flex;align-items:center;background:var(--blue-soft);color:var(--blue);
+      padding:4px 8px;border-radius:999px;font-size:12px;font-weight:800;margin-top:6px;
+    }
+    .day-check{
+      width:44px;height:44px;border:2px solid #ccd4de;border-radius:50%;
+      display:grid;place-items:center;flex:0 0 44px;cursor:pointer;font-size:28px;color:transparent;
+    }
+    .day-habit.done .day-check{border-color:var(--green);background:var(--green-soft);color:var(--green)}
+    .day-habit.done .day-check::before{content:"✓";font-weight:900}
+    .day-info,.habit-info{
+      width:31px;height:31px;border-radius:50%;display:grid;place-items:center;
+      color:#919ca7;background:#f1f4f7;font-size:16px;font-weight:800;cursor:pointer;flex:0 0 31px;
+    }
+    .habit-name .label{cursor:pointer}
+    .day-empty{
+      margin-top:14px;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);
+      padding:30px 20px;text-align:center;color:var(--muted);line-height:1.45;
+    }
+    .stats-head{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+    .stats-emoji{
+      width:52px;height:52px;border-radius:16px;background:var(--blue-soft);
+      display:grid;place-items:center;font-size:28px;flex:0 0 52px;
+    }
+    .stats-title{font-size:23px;font-weight:850;line-height:1.1}
+    .stats-sub{color:var(--muted);font-size:13px;margin-top:5px}
+    .stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
+    .stat-card{background:#f6f8fb;border-radius:14px;padding:13px}
+    .stat-value{font-size:24px;font-weight:850;letter-spacing:-.02em}
+    .stat-label{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.25}
+    .history-title{font-size:14px;font-weight:850;margin:19px 0 9px}
+    .history-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+    .history-day{
+      min-height:43px;border-radius:10px;background:#f2f4f7;display:flex;flex-direction:column;
+      align-items:center;justify-content:center;font-size:11px;color:#7c8793;line-height:1.05;
+    }
+    .history-day strong{font-size:13px;color:#4f5965;margin-bottom:3px}
+    .history-day.done{background:var(--green-soft);color:var(--green)}
+    .history-day.done strong{color:var(--green)}
+    .history-day.off{opacity:.45}
+    .history-day.today{outline:2px solid #a9c3f3}
+    .week-history{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+    .week-chip{
+      border-radius:11px;background:#f2f4f7;padding:9px 5px;text-align:center;
+      font-size:11px;color:#75808c;line-height:1.2;
+    }
+    .week-chip.done{background:var(--green-soft);color:var(--green);font-weight:800}
+    .tap-hint{margin-top:8px;color:var(--muted);font-size:12px;text-align:center}
+
     @media (max-width:680px){
       .app{padding:10px 8px 100px}
       .summary h1{font-size:26px}
@@ -189,6 +265,11 @@
     <div class="progress"><span id="progressBar"></span></div>
   </div>
 
+  <div class="mode-switch" role="tablist" aria-label="Режим просмотра">
+    <button id="dayModeBtn" class="active" role="tab" aria-selected="true">День</button>
+    <button id="weekModeBtn" role="tab" aria-selected="false">Неделя</button>
+  </div>
+
   <section class="weekbox">
     <div class="week-head">
       <div class="week-label" id="weekLabel">Эта неделя</div>
@@ -202,6 +283,7 @@
       <div class="days" id="daysHeader"></div>
     </div>
   </section>
+  <div class="tap-hint" id="tapHint">Нажми на дату сверху, чтобы выбрать день</div>
 
   <main id="groups"></main>
 </div>
@@ -252,6 +334,17 @@
       <button value="default" class="btn primary" id="saveHabit">Сохранить</button>
     </div>
   </form>
+</dialog>
+
+
+<dialog id="statsDialog">
+  <div class="modal">
+    <div id="statsContent"></div>
+    <div class="modal-actions">
+      <button class="btn secondary" id="editFromStats">Редактировать</button>
+      <button class="btn primary" id="closeStats">Готово</button>
+    </div>
+  </div>
 </dialog>
 
 <dialog id="settingsDialog">
@@ -326,6 +419,9 @@
 
   let state = load();
   let selectedWeekOffset = 0;
+  let selectedDate = new Date();
+  let viewMode = localStorage.getItem('myHabitsViewMode') || 'day';
+  let statsHabitId = null;
 
   const $ = (s) => document.querySelector(s);
   const els = {
@@ -336,7 +432,8 @@
     weekSummary: $('#weekSummary'),
     progressBar: $('#progressBar'),
     habitDialog: $('#habitDialog'),
-    settingsDialog: $('#settingsDialog')
+    settingsDialog: $('#settingsDialog'),
+    statsDialog: $('#statsDialog')
   };
 
   function clone(x){ return JSON.parse(JSON.stringify(x)); }
@@ -412,30 +509,152 @@
   function render(){
     const weekStart=getWeekStart();
     const today=new Date();
+
+    document.body.classList.toggle('day-mode', viewMode==='day');
+    $('#dayModeBtn').classList.toggle('active', viewMode==='day');
+    $('#weekModeBtn').classList.toggle('active', viewMode==='week');
+    $('#dayModeBtn').setAttribute('aria-selected', String(viewMode==='day'));
+    $('#weekModeBtn').setAttribute('aria-selected', String(viewMode==='week'));
+    $('#tapHint').textContent = viewMode==='day'
+      ? 'Нажми на дату сверху, чтобы выбрать другой день'
+      : 'Нажми на дату сверху, чтобы открыть этот день';
+
     renderHeader(weekStart,today);
-    renderGroups(weekStart,today);
+    if(viewMode==='day') renderDayGroups(selectedDate);
+    else renderGroups(weekStart,today);
     updateSummary(today,weekStart);
   }
 
   function renderHeader(weekStart,today){
     const weekEnd=addDays(weekStart,6);
-    const sameMonth=weekStart.getMonth()===weekEnd.getMonth();
     const fmt1=new Intl.DateTimeFormat('ru-RU',{day:'numeric',month:'short'});
     const fmt2=new Intl.DateTimeFormat('ru-RU',{day:'numeric',month:'short',year:'numeric'});
-    els.weekLabel.textContent = selectedWeekOffset===0 ? 'Эта неделя' :
-      selectedWeekOffset===-1 ? 'Прошлая неделя' :
-      selectedWeekOffset===1 ? 'Следующая неделя' :
-      `${fmt1.format(weekStart)} — ${fmt2.format(weekEnd)}`;
+    const fmtDay=new Intl.DateTimeFormat('ru-RU',{weekday:'long',day:'numeric',month:'long'});
+
+    if(viewMode==='day'){
+      const title=sameDate(selectedDate,today) ? 'Сегодня' : fmtDay.format(selectedDate);
+      els.weekLabel.textContent=title.charAt(0).toUpperCase()+title.slice(1);
+    }else{
+      els.weekLabel.textContent = selectedWeekOffset===0 ? 'Эта неделя' :
+        selectedWeekOffset===-1 ? 'Прошлая неделя' :
+        selectedWeekOffset===1 ? 'Следующая неделя' :
+        `${fmt1.format(weekStart)} — ${fmt2.format(weekEnd)}`;
+    }
 
     els.daysHeader.innerHTML='';
-    const spacer=document.createElement('div'); spacer.className='day-spacer'; els.daysHeader.appendChild(spacer);
+    if(viewMode==='week'){
+      const spacer=document.createElement('div');
+      spacer.className='day-spacer';
+      els.daysHeader.appendChild(spacer);
+    }
+
     for(let i=0;i<7;i++){
       const d=addDays(weekStart,i);
       const el=document.createElement('div');
-      el.className='day'+(isWeekend(d)?' weekend':'')+(sameDate(d,today)?' today':'');
+      const selected=viewMode==='day' && sameDate(d,selectedDate);
+      el.className='day'+(isWeekend(d)?' weekend':'')+(sameDate(d,today)?' today':'')+(selected?' selected':'');
       el.innerHTML=`<div class="num">${d.getDate()}</div><div class="dow">${DOW[i]}</div>`;
+      el.style.cursor='pointer';
+      el.onclick=()=>{
+        selectedDate=new Date(d);
+        if(viewMode==='week'){
+          viewMode='day';
+          localStorage.setItem('myHabitsViewMode',viewMode);
+        }
+        render();
+      };
       els.daysHeader.appendChild(el);
     }
+  }
+
+  function renderDayGroups(date){
+    els.groups.innerHTML='';
+    const weekStart=mondayOf(date);
+    let rendered=0;
+
+    for(const group of state.groups){
+      const habits=state.habits.filter(h =>
+        h.group===group.id && (h.schedule?.type==='weekly' || applies(h,date))
+      );
+      if(!habits.length) continue;
+      rendered++;
+
+      const sec=document.createElement('section');
+      sec.className='group'+(group.collapsed?' collapsed':'');
+      sec.innerHTML=`
+        <div class="group-head">
+          <div class="group-accent" style="background:${group.color||'#356fd8'}"></div>
+          <div style="font-size:22px">${group.icon||''}</div>
+          <div class="group-title">${escapeHtml(group.title)}</div>
+          <div class="group-count"></div>
+          <div class="chev">⌄</div>
+        </div>
+        <div class="group-body"><div class="day-group-list"></div></div>`;
+
+      sec.querySelector('.group-head').onclick=()=>{
+        group.collapsed=!group.collapsed; save(); render();
+      };
+
+      const list=sec.querySelector('.day-group-list');
+      let dailyTotal=0, dailyDone=0, weeklyGoal=0, weeklyDone=0;
+
+      for(const habit of habits){
+        const isWeekly=habit.schedule?.type==='weekly';
+        if(isWeekly){
+          const target=habit.schedule.target||1;
+          weeklyGoal+=target;
+          weeklyDone+=Math.min(weeklyCount(habit,weekStart),target);
+        }else{
+          dailyTotal++;
+          if(isDone(habit.id,date)) dailyDone++;
+        }
+        renderDayHabit(list,habit,date,weekStart);
+      }
+
+      const countEl=sec.querySelector('.group-count');
+      if(dailyTotal) countEl.textContent=`${dailyDone} из ${dailyTotal}`;
+      else if(weeklyGoal) countEl.textContent=`${weeklyDone} из ${weeklyGoal}`;
+      else countEl.textContent='—';
+
+      els.groups.appendChild(sec);
+    }
+
+    if(!rendered){
+      els.groups.innerHTML='<div class="day-empty">На этот день ничего не запланировано.</div>';
+    }
+  }
+
+  function renderDayHabit(list,habit,date,weekStart){
+    const done=isDone(habit.id,date);
+    const isWeekly=habit.schedule?.type==='weekly';
+    const row=document.createElement('div');
+    row.className='day-habit'+(done?' done':'');
+
+    let meta='';
+    if(isWeekly){
+      const count=weeklyCount(habit,weekStart);
+      const target=habit.schedule.target||1;
+      meta=`<div class="weekly-progress">${Math.min(count,target)} из ${target} за неделю${count>=target?' · цель выполнена':''}</div>`;
+    }else{
+      meta=`<div class="meta">${escapeHtml(scheduleLabel(habit))}</div>`;
+    }
+
+    row.innerHTML=`
+      <div class="emoji">${habit.emoji||'✓'}</div>
+      <div class="info">
+        <div class="title">${escapeHtml(habit.name)}</div>
+        ${meta}
+      </div>
+      <button class="day-info" aria-label="Статистика">i</button>
+      <button class="day-check" aria-label="${done?'Снять отметку':'Отметить выполненным'}"></button>`;
+
+    row.querySelector('.info').onclick=()=>openStats(habit);
+    row.querySelector('.day-info').onclick=(e)=>{e.stopPropagation();openStats(habit)};
+    row.querySelector('.day-check').onclick=(e)=>{
+      e.stopPropagation();
+      setDone(habit.id,date,!done);
+    };
+    list.appendChild(row);
   }
 
   function renderGroups(weekStart,today){
@@ -478,7 +697,10 @@
         <span class="meta">${escapeHtml(scheduleLabel(habit))}</span>
         ${weekly}
       </div>
+      <button class="habit-info" aria-label="Статистика">i</button>
       <button class="habit-menu" aria-label="Редактировать">⋮</button>`;
+    name.querySelector('.label').onclick=()=>openStats(habit);
+    name.querySelector('.habit-info').onclick=(e)=>{ e.stopPropagation(); openStats(habit); };
     name.querySelector('.habit-menu').onclick=(e)=>{ e.stopPropagation(); openHabitDialog(habit); };
     grid.appendChild(name);
 
@@ -490,29 +712,12 @@
       cell.className='cell'+(isWeekend(d)?' weekend':'')+(sameDate(d,today)?' today':'')+(!on?' off':'')+(done?' done':'');
       cell.title = on ? `${habit.name} — ${isoDate(d)}` : 'В этот день привычка не действует';
       cell.innerHTML='<div class="mark"></div>';
-      if(on){
-        cell.onclick=()=>setDone(habit.id,d,!done);
-      }
+      if(on) cell.onclick=()=>setDone(habit.id,d,!done);
       grid.appendChild(cell);
     }
   }
 
   function updateSummary(today,weekStart){
-    let active=0, done=0;
-    const todayInSelectedWeek = today>=weekStart && today<addDays(weekStart,7);
-    if(todayInSelectedWeek){
-      for(const h of state.habits){
-        if(h.schedule?.type==='weekly') continue;
-        if(applies(h,today)){ active++; if(isDone(h.id,today)) done++; }
-      }
-      const pct=active?Math.round(done/active*100):0;
-      els.todaySummary.textContent=`Сегодня ${done} из ${active} · ${pct}%`;
-      els.progressBar.style.width=`${pct}%`;
-    }else{
-      els.todaySummary.textContent='Просмотр недели';
-      els.progressBar.style.width='0%';
-    }
-
     let weekDone=0, weekGoal=0;
     for(const h of state.habits){
       if(h.schedule?.type==='weekly'){
@@ -522,11 +727,38 @@
       }else{
         for(let i=0;i<7;i++){
           const d=addDays(weekStart,i);
-          if(applies(h,d)){ weekGoal++; if(isDone(h.id,d)) weekDone++; }
+          if(applies(h,d)){
+            weekGoal++;
+            if(isDone(h.id,d)) weekDone++;
+          }
         }
       }
     }
-    els.weekSummary.textContent=`Неделя: ${weekDone} из ${weekGoal}`;
+    const weekPct=weekGoal?Math.round(weekDone/weekGoal*100):0;
+
+    if(viewMode==='week'){
+      els.todaySummary.textContent=`Неделя ${weekDone} из ${weekGoal} · ${weekPct}%`;
+      els.weekSummary.textContent=selectedWeekOffset===0?'Текущая неделя':'Выбранная неделя';
+      els.progressBar.style.width=`${weekPct}%`;
+      return;
+    }
+
+    let active=0, done=0;
+    for(const h of state.habits){
+      if(h.schedule?.type==='weekly') continue;
+      if(applies(h,selectedDate)){
+        active++;
+        if(isDone(h.id,selectedDate)) done++;
+      }
+    }
+    const pct=active?Math.round(done/active*100):0;
+    const label=sameDate(selectedDate,today)
+      ? 'Сегодня'
+      : new Intl.DateTimeFormat('ru-RU',{day:'numeric',month:'long'}).format(selectedDate);
+
+    els.todaySummary.textContent=`${label} ${done} из ${active} · ${pct}%`;
+    els.weekSummary.textContent=`Неделя: ${weekDone} из ${weekGoal} · ${weekPct}%`;
+    els.progressBar.style.width=`${pct}%`;
   }
 
   function updateGroupCount(group,habits,today,weekStart){
@@ -542,6 +774,162 @@
       }
     }
     el.textContent = total ? `${done} из ${total}` : '—';
+  }
+
+
+  function doneDatesFor(habit){
+    const obj=state.done[habit.id]||{};
+    return Object.keys(obj).filter(k=>obj[k]).sort();
+  }
+
+  function currentDailyStreak(habit){
+    const today=new Date();
+    let d=new Date(today.getFullYear(),today.getMonth(),today.getDate());
+    let streak=0;
+
+    // Сегодняшняя незакрытая привычка пока не обнуляет серию.
+    if(applies(habit,d) && !isDone(habit.id,d)) d=addDays(d,-1);
+
+    for(let guard=0;guard<3700;guard++){
+      if(applies(habit,d)){
+        if(isDone(habit.id,d)) streak++;
+        else break;
+      }
+      d=addDays(d,-1);
+    }
+    return streak;
+  }
+
+  function bestDailyStreak(habit){
+    const dates=doneDatesFor(habit);
+    if(!dates.length) return 0;
+    let start=dateFromISO(dates[0]);
+    const end=new Date();
+    let best=0,cur=0;
+    for(let d=new Date(start),guard=0; d<=end && guard<3700; d=addDays(d,1),guard++){
+      if(!applies(habit,d)) continue;
+      if(isDone(habit.id,d)){cur++;best=Math.max(best,cur)}
+      else cur=0;
+    }
+    return best;
+  }
+
+  function lastScheduledRate(habit,limit=30){
+    let scheduled=0,done=0;
+    let d=new Date();
+    d=new Date(d.getFullYear(),d.getMonth(),d.getDate());
+    for(let guard=0;guard<3700 && scheduled<limit;guard++,d=addDays(d,-1)){
+      if(applies(habit,d)){
+        scheduled++;
+        if(isDone(habit.id,d)) done++;
+      }
+    }
+    return {done,scheduled,pct:scheduled?Math.round(done/scheduled*100):0};
+  }
+
+  function weekCompleted(habit,weekStart){
+    return weeklyCount(habit,weekStart) >= (habit.schedule?.target||1);
+  }
+
+  function currentWeeklyStreak(habit){
+    const current=mondayOf(new Date());
+    let w=new Date(current);
+    let streak=0;
+    if(weekCompleted(habit,w)){
+      streak=1;
+      w=addDays(w,-7);
+    }else{
+      w=addDays(w,-7);
+    }
+    for(let guard=0;guard<520;guard++,w=addDays(w,-7)){
+      if(weekCompleted(habit,w)) streak++;
+      else break;
+    }
+    return streak;
+  }
+
+  function bestWeeklyStreak(habit){
+    const dates=doneDatesFor(habit);
+    if(!dates.length) return 0;
+    let w=mondayOf(dateFromISO(dates[0]));
+    const current=mondayOf(new Date());
+    let best=0,cur=0;
+    for(let guard=0;w<=current && guard<520;guard++,w=addDays(w,7)){
+      if(weekCompleted(habit,w)){cur++;best=Math.max(best,cur)}
+      else cur=0;
+    }
+    return best;
+  }
+
+  function completedWeeksTotal(habit){
+    const dates=doneDatesFor(habit);
+    if(!dates.length) return 0;
+    let w=mondayOf(dateFromISO(dates[0]));
+    const current=mondayOf(new Date());
+    let n=0;
+    for(let guard=0;w<=current && guard<520;guard++,w=addDays(w,7)){
+      if(weekCompleted(habit,w)) n++;
+    }
+    return n;
+  }
+
+  function openStats(habit){
+    statsHabitId=habit.id;
+    const isWeekly=habit.schedule?.type==='weekly';
+    const total=doneDatesFor(habit).length;
+    let html=`<div class="stats-head">
+      <div class="stats-emoji">${habit.emoji||'✓'}</div>
+      <div><div class="stats-title">${escapeHtml(habit.name)}</div>
+      <div class="stats-sub">${escapeHtml(scheduleLabel(habit))}</div></div>
+    </div>`;
+
+    if(isWeekly){
+      const cur=currentWeeklyStreak(habit);
+      const best=bestWeeklyStreak(habit);
+      const weeks=completedWeeksTotal(habit);
+      const ws=mondayOf(new Date());
+      const thisCount=weeklyCount(habit,ws);
+      const target=habit.schedule.target||1;
+      html+=`<div class="stats-grid">
+        <div class="stat-card"><div class="stat-value">${cur}</div><div class="stat-label">текущая серия, недель</div></div>
+        <div class="stat-card"><div class="stat-value">${best}</div><div class="stat-label">лучшая серия, недель</div></div>
+        <div class="stat-card"><div class="stat-value">${weeks}</div><div class="stat-label">недель цель выполнена</div></div>
+        <div class="stat-card"><div class="stat-value">${Math.min(thisCount,target)}/${target}</div><div class="stat-label">эта неделя</div></div>
+      </div>
+      <div class="history-title">Последние 12 недель</div>
+      <div class="week-history">`;
+      for(let i=11;i>=0;i--){
+        const w=addDays(ws,-7*i);
+        const ok=weekCompleted(habit,w);
+        const label=new Intl.DateTimeFormat('ru-RU',{day:'numeric',month:'short'}).format(w);
+        html+=`<div class="week-chip${ok?' done':''}">${label}<br>${ok?'✓':'—'}</div>`;
+      }
+      html+=`</div>`;
+    }else{
+      const cur=currentDailyStreak(habit);
+      const best=bestDailyStreak(habit);
+      const rate=lastScheduledRate(habit,30);
+      html+=`<div class="stats-grid">
+        <div class="stat-card"><div class="stat-value">${cur}</div><div class="stat-label">дней в текущей серии</div></div>
+        <div class="stat-card"><div class="stat-value">${best}</div><div class="stat-label">лучшая серия, дней</div></div>
+        <div class="stat-card"><div class="stat-value">${total}</div><div class="stat-label">всего дней отмечено</div></div>
+        <div class="stat-card"><div class="stat-value">${rate.pct}%</div><div class="stat-label">из последних ${rate.scheduled} плановых дней</div></div>
+      </div>
+      <div class="history-title">Последние 28 дней</div>
+      <div class="history-grid">`;
+      const today=new Date();
+      for(let i=27;i>=0;i--){
+        const d=addDays(today,-i);
+        const on=applies(habit,d);
+        const done=isDone(habit.id,d);
+        const cls='history-day'+(!on?' off':'')+(done?' done':'')+(sameDate(d,today)?' today':'');
+        html+=`<div class="${cls}"><strong>${d.getDate()}</strong>${DOW[dayIndexMon0(d)]}</div>`;
+      }
+      html+=`</div>`;
+    }
+
+    $('#statsContent').innerHTML=html;
+    els.statsDialog.showModal();
   }
 
   function escapeHtml(s=''){
@@ -609,9 +997,39 @@
   $('#fab').onclick=()=>openHabitDialog();
   $('#settingsBtn').onclick=()=>els.settingsDialog.showModal();
   $('#closeSettings').onclick=()=>els.settingsDialog.close();
-  $('#prevWeek').onclick=()=>{selectedWeekOffset--;render()};
-  $('#nextWeek').onclick=()=>{selectedWeekOffset++;render()};
-  $('#currentWeek').onclick=()=>{selectedWeekOffset=0;render()};
+  $('#dayModeBtn').onclick=()=>{
+    viewMode='day';
+    localStorage.setItem('myHabitsViewMode',viewMode);
+    const ws=getWeekStart();
+    if(selectedDate<ws || selectedDate>=addDays(ws,7)) selectedDate=new Date(ws);
+    render();
+  };
+  $('#weekModeBtn').onclick=()=>{
+    viewMode='week';
+    localStorage.setItem('myHabitsViewMode',viewMode);
+    render();
+  };
+  $('#prevWeek').onclick=()=>{
+    selectedWeekOffset--;
+    if(viewMode==='day') selectedDate=addDays(selectedDate,-7);
+    render();
+  };
+  $('#nextWeek').onclick=()=>{
+    selectedWeekOffset++;
+    if(viewMode==='day') selectedDate=addDays(selectedDate,7);
+    render();
+  };
+  $('#currentWeek').onclick=()=>{
+    selectedWeekOffset=0;
+    selectedDate=new Date();
+    render();
+  };
+  $('#closeStats').onclick=()=>els.statsDialog.close();
+  $('#editFromStats').onclick=()=>{
+    const h=state.habits.find(x=>x.id===statsHabitId);
+    els.statsDialog.close();
+    if(h) openHabitDialog(h);
+  };
 
   $('#exportBtn').onclick=()=>{
     const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});
@@ -637,7 +1055,7 @@
   };
   $('#resetBtn').onclick=()=>{
     if(confirm('Сбросить все привычки и историю?')){
-      state=clone(defaultState); save(); selectedWeekOffset=0; render(); els.settingsDialog.close(); toast('Создан стартовый набор');
+      state=clone(defaultState); save(); selectedWeekOffset=0; selectedDate=new Date(); render(); els.settingsDialog.close(); toast('Создан стартовый набор');
     }
   };
 
