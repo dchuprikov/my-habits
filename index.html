@@ -293,7 +293,7 @@
       .week-nav button{width:31px;height:31px;border-radius:9px;font-size:18px}
       .days,
       .habit-grid{
-        grid-template-columns:29% repeat(7,10.142857%);
+        grid-template-columns:34% repeat(7,9.428571%);
         width:100%;
         min-width:0;
       }
@@ -312,18 +312,56 @@
       .group-count{font-size:14px}
       .chev{font-size:15px}
       .habit-name{
-        min-height:57px;gap:4px;padding:6px 3px 6px 6px;
-        min-width:0;overflow:hidden;
+        min-height:68px;
+        display:grid;
+        grid-template-columns:24px 26px 26px 1fr;
+        grid-template-areas:
+          "label label label label"
+          "emoji info menu .";
+        column-gap:5px;
+        row-gap:5px;
+        align-content:center;
+        padding:7px 5px 7px 8px;
+        min-width:0;
+        overflow:hidden;
       }
       .habit-name .label{
-        min-width:0;overflow:hidden;overflow-wrap:anywhere;
+        grid-area:label;
+        min-width:0;
+        overflow:hidden;
+        font-size:13.5px;
+        line-height:1.18;
+        overflow-wrap:normal;
+        word-break:normal;
+        hyphens:none;
+        display:-webkit-box;
+        -webkit-line-clamp:2;
+        -webkit-box-orient:vertical;
       }
-      .habit-name .emoji{width:21px;font-size:17px}
-      .habit-name .label{font-size:13.5px;line-height:1.12}
-      .habit-name .meta{font-size:9.5px;margin-top:3px}
-      .habit-info{width:24px;height:24px;flex-basis:24px;font-size:12px}
-      .habit-menu{width:23px;height:27px;font-size:16px}
-      .cell{min-height:57px}
+      .habit-name .emoji{
+        grid-area:emoji;
+        width:24px;
+        font-size:17px;
+        align-self:center;
+      }
+      .habit-name .meta{
+        display:block;
+        font-size:9.5px;
+        line-height:1.15;
+        margin-top:3px;
+        white-space:normal;
+      }
+      .habit-info{
+        grid-area:info;
+        width:24px;height:24px;flex-basis:24px;font-size:12px;
+        align-self:center;
+      }
+      .habit-menu{
+        grid-area:menu;
+        width:24px;height:24px;font-size:16px;
+        align-self:center;
+      }
+      .cell{min-height:68px}
       .cell .mark{width:28px;height:28px;font-size:23px}
       .cell:not(.done):not(.off) .mark::before{font-size:27px}
       .weekly-badge{font-size:9px;padding:3px 5px;margin-top:3px}
