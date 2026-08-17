@@ -724,6 +724,72 @@
       .tap-hint{opacity:.74}
     }
 
+
+    /* ===== v5.1: final fit-and-finish ===== */
+
+    /* Quieter exception control */
+    .day-mode-tools{
+      justify-content:flex-start;
+      padding:0;
+      margin:5px 1px 0;
+      background:transparent;
+      border:0;
+      box-shadow:none;
+    }
+    .away-btn{
+      padding:6px 9px;
+      background:transparent;
+      border:0;
+      box-shadow:none;
+      color:#8B95A4;
+      font-size:12px;
+      font-weight:700;
+    }
+    .away-btn.active{
+      background:#FFF4E6;
+      border:1px solid #F0CFA0;
+      color:#93621C;
+    }
+
+    /* Smaller, less intrusive FAB */
+    .fab{
+      width:44px;
+      height:44px;
+      border-radius:15px;
+      font-size:24px;
+      right:10px;
+      bottom:calc(12px + env(safe-area-inset-bottom));
+      opacity:.96;
+      transition:transform .16s ease, box-shadow .16s ease, opacity .16s ease;
+    }
+    .fab:hover{opacity:1}
+    .fab:active{opacity:.88}
+
+    /* Week mode: make controls secondary so habit names breathe */
+    @media (max-width:680px){
+      body:not(.day-mode) .habit-info{
+        width:21px;height:21px;flex-basis:21px;font-size:10px;
+      }
+      body:not(.day-mode) .habit-menu{
+        width:21px;height:21px;font-size:14px;
+      }
+      body:not(.day-mode) .habit-name{
+        grid-template-columns:23px 22px 22px 1fr;
+        column-gap:3px;
+        row-gap:4px;
+      }
+      body:not(.day-mode) .habit-name .label{
+        font-size:12.8px;
+        line-height:1.16;
+      }
+      body:not(.day-mode) .habit-name .meta{
+        font-size:8.8px;
+      }
+
+      /* Slightly more bottom breathing room so FAB never covers the last row */
+      .app{padding-bottom:96px}
+    }
+
   </style>
 </head>
 <body>
@@ -762,7 +828,6 @@
   </section>
   <div class="tap-hint" id="tapHint">Нажми на дату сверху, чтобы выбрать день</div>
   <div class="day-mode-tools">
-    <span class="tool-label">Исключения на день</span>
     <button class="away-btn" id="awayBtn">✈️ Вне режима</button>
   </div>
 
@@ -1286,11 +1351,7 @@
       }
     }
     const pct=active?Math.round(done/active*100):0;
-    const label=sameDate(selectedDate,today)
-      ? 'Сегодня'
-      : new Intl.DateTimeFormat('ru-RU',{day:'numeric',month:'long'}).format(selectedDate);
-
-    els.todaySummary.textContent=`${label} ${done} из ${active} · ${pct}%`;
+    els.todaySummary.textContent=`${done} из ${active} · ${pct}%`;
     els.weekSummary.textContent=`Неделя: ${weekDone} из ${weekGoal} · ${weekPct}%`;
     els.progressBar.style.width=`${pct}%`;
   }
@@ -1669,6 +1730,16 @@
     const t=$('#toast'); t.textContent=msg; t.classList.add('show');
     clearTimeout(window.__toast); window.__toast=setTimeout(()=>t.classList.remove('show'),1800);
   }
+
+
+  let __fabScrollTimer=null;
+  window.addEventListener('scroll',()=>{
+    const fab=$('#fab');
+    if(!fab) return;
+    fab.style.opacity='.58';
+    clearTimeout(__fabScrollTimer);
+    __fabScrollTimer=setTimeout(()=>{ fab.style.opacity='.96'; },220);
+  },{passive:true});
 
   initDowPicks();
   render();
