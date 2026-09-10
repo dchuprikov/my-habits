@@ -790,6 +790,27 @@
       .app{padding-bottom:96px}
     }
 
+
+    .move-actions{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:8px;
+      margin-top:16px;
+      padding-top:14px;
+      border-top:1px solid var(--line);
+    }
+    .move-actions .btn{
+      background:#F3F5F9;
+      color:#566172;
+      border:1px solid #E8ECF2;
+      box-shadow:none;
+    }
+    .move-actions .btn:active{transform:scale(.98)}
+    @media (max-width:680px){
+      .move-actions{margin-top:13px;padding-top:12px;gap:6px}
+      .move-actions .btn{font-size:12.5px;padding:9px 8px}
+    }
+
   </style>
 </head>
 <body>
@@ -873,6 +894,10 @@
       <label for="weeklyTarget">Сколько раз за неделю</label>
       <input id="weeklyTarget" type="number" min="1" max="7" value="1">
       <div class="hint" style="margin-top:6px">Можно выполнить в любой день недели. Невыполненные дни не считаются «просроченными».</div>
+    </div>
+    <div class="move-actions" id="moveActions" hidden>
+      <button type="button" class="btn secondary" id="moveHabitUp">↑ Выше</button>
+      <button type="button" class="btn secondary" id="moveHabitDown">↓ Ниже</button>
     </div>
     <div class="modal-actions">
       <button type="button" class="btn danger" id="deleteHabit" hidden>Удалить</button>
@@ -1594,6 +1619,36 @@
     toast('Обычный день');
   }
 
+
+  function moveHabit(habitId,direction){
+    const idx=state.habits.findIndex(h=>h.id===habitId);
+    if(idx<0) return;
+
+    const habit=state.habits[idx];
+    let target=-1;
+
+    if(direction<0){
+      for(let i=idx-1;i>=0;i--){
+        if(state.habits[i].group===habit.group){ target=i; break; }
+      }
+    }else{
+      for(let i=idx+1;i<state.habits.length;i++){
+        if(state.habits[i].group===habit.group){ target=i; break; }
+      }
+    }
+
+    if(target<0){
+      toast(direction<0?'Уже самая верхняя':'Уже самая нижняя');
+      return;
+    }
+
+    const [item]=state.habits.splice(idx,1);
+    state.habits.splice(target,0,item);
+    save();
+    render();
+    toast(direction<0?'Перемещено выше':'Перемещено ниже');
+  }
+
   function escapeHtml(s=''){
     return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
   }
@@ -1611,6 +1666,7 @@
       inp.checked=(habit?.schedule?.days||[]).includes(Number(inp.value));
     });
     $('#deleteHabit').hidden=!habit;
+    $('#moveActions').hidden=!habit;
     toggleScheduleFields();
     els.habitDialog.showModal();
   }
@@ -1643,6 +1699,15 @@
     if(idx>=0) state.habits[idx]=next; else state.habits.push(next);
     save(); els.habitDialog.close(); render(); toast(idx>=0?'Привычка обновлена':'Привычка добавлена');
   });
+
+  $('#moveHabitUp').onclick=()=>{
+    const id=$('#habitId').value;
+    if(id) moveHabit(id,-1);
+  };
+  $('#moveHabitDown').onclick=()=>{
+    const id=$('#habitId').value;
+    if(id) moveHabit(id,1);
+  };
 
   $('#deleteHabit').onclick=()=>{
     const id=$('#habitId').value;
